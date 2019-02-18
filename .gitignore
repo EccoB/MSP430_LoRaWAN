@@ -1,0 +1,12 @@
+Debug
+DEBUG_DMA
+Debug2
+Release
+.xdchelp
+.config
+.launches
+
+#CodeComposer
+.xdchelp
+config/*
+.launches/*

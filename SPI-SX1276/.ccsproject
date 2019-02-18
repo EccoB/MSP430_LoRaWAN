@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?ccsproject version="1.0"?>
+<projectOptions>
+	<ccsVersion value="8.0.0"/>
+	<deviceVariant value="MSP430FR5969"/>
+	<deviceFamily value="MSP430"/>
+	<deviceEndianness value="little"/>
+	<codegenToolVersion value="18.1.1.LTS"/>
+	<isElfFormat value="true"/>
+	<linkerCommandFile value="lnk_msp430fr5969.cmd"/>
+	<rts value="libc.a"/>
+	<createSlaveProjects value=""/>
+	<templateProperties value="id=eusci_b_spi_ex1_master.projectspec.eusci_b_spi_ex1_master,"/>
+	<origin value="C:\ti\msp430ware_3_80_03_07\driverlib\examples\MSP430FR5xx_6xx\eusci_b_spi\CCS\eusci_b_spi_ex1_master.projectspec"/>
+	<filesToOpen value=""/>
+	<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
+	<isTargetManual value="false"/>
+</projectOptions>
