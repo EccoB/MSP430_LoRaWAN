@@ -20,12 +20,13 @@ You are going to need Code Composer to compile, flash the code.
 The code is tested on the MSP430FR5969, but should also work on other MSP430.
 
 Default Pins used for the SX1276 LoTa Transmitter:
-MSP430FR5969	RFM95/SX1276
-MOSI/P1.6		MOSI
-MISO/P1.7		MISO
-SCLK/P2.2		SCK
-P1.4			NSS				Chipselect
-P1.3			DIO0			TX Interrupt
+| MSP430FR5969 | RFM95/SX1276 | Description |
+| --- | --- | --- |
+| MOSI/P1.6 | MOSI | SPI |
+| MISO/P1.7 | MISO | SPI |
+| SCLK/P2.2 | SCK | SPI |
+| P1.4 | NSS | Chipselect |
+| P1.3 | DIO0 | TX Interrupt |
 
 
 ## Used libraries
