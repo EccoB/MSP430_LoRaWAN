@@ -19,7 +19,9 @@ The code will send some example data to TTN after startup.
 You are going to need Code Composer to compile, flash the code.
 The code is tested on the MSP430FR5969, but should also work on other MSP430.
 
-Default Pins used for the SX1276 LoTa Transmitter:
+Default Pins used for the SX1276 LoTa Transmitter
+
+
 | MSP430FR5969 | RFM95/SX1276 | Description |
 | --- | --- | --- |
 | MOSI/P1.6 | MOSI | SPI |
