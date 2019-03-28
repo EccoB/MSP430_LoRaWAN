@@ -28,7 +28,7 @@ extern const uint32_t device_address;
 #define FSK_FIX_LENGTH_PAYLOAD_ON         false
 
 #define LORA_BANDWIDTH                              0         // [0: 125 kHz, 1: 250 kHz, 2: 500 kHz, 3: Reserved]
-#define LORA_SPREADING_FACTOR                       7         // [SF7..SF12]
+#define LORA_SPREADING_FACTOR                       9         // [SF7..SF12]
 #define LORA_CODINGRATE                             1         // [1: 4/5, 2: 4/6, 3: 4/7, 4: 4/8]
 #define LORA_PREAMBLE_LENGTH                        6         // Same for Tx and Rx
 #define LORA_SYMBOL_TIMEOUT                         3         // Symbols
@@ -47,9 +47,11 @@ extern const uint32_t device_address;
 
 #define LORA_PORT	GPIO_PORT_P1
 #define LORA_CSPIN	GPIO_PIN5
+#define LORA_RESET  GPIO_PIN4
 #define LORA_IVTXD	GPIO_PIN3
 
-#define RFM95		//as the RFM95 uses PA_BOOST, this has to be activated, otherwise transmission won't work
+
+//#define RFM95		// Must be defined when using the RFM95 module, as this uses PA_BOOST. For the inAir9 module this line should be commented.
 //---------------------------------------------------------------------------------------
 
 // ---- default values for Init of transmitter ---------------
@@ -58,9 +60,9 @@ extern const uint32_t device_address;
 #define PHY_PAYLOAD_SIZE    MESSAGE_SIZE + 4        // 4 Bytes Message Integrity Check
 
 #ifdef RFM95
-	#define TX_OUTPUT_POWER                   7 // (real power = output_power (PA_BOOST in use) [dBm])
+	#define TX_OUTPUT_POWER                   13 // (real power = output_power (PA_BOOST in use) [dBm])
 #else
-	#define TX_OUTPUT_POWER                   7 // (real power = output_power (RFO in use) [dBm])
+	#define TX_OUTPUT_POWER                   10 // (real power = output_power (RFO in use) [dBm])
 #endif
 
 

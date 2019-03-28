@@ -133,10 +133,10 @@ void sx1276_init(radio_events_t* events) {
   sx1276_set_opmode(RFLR_OPMODE_SLEEP);
 
   // Init IRQ interrupt for DIO0 = TXDone
-  GPIO_setAsInputPinWithPullDownResistor( GPIO_PORT_P1, GPIO_PIN3 );          // IRQ pin
-  GPIO_selectInterruptEdge( GPIO_PORT_P1, GPIO_PIN3, GPIO_LOW_TO_HIGH_TRANSITION );
-  GPIO_clearInterrupt( GPIO_PORT_P1, GPIO_PIN3 );
-  GPIO_enableInterrupt( GPIO_PORT_P1, GPIO_PIN3 );
+  GPIO_setAsInputPinWithPullDownResistor( LORA_PORT, LORA_IVTXD );          // IRQ pin
+  GPIO_selectInterruptEdge( LORA_PORT, LORA_IVTXD, GPIO_LOW_TO_HIGH_TRANSITION );
+  GPIO_clearInterrupt( LORA_PORT, LORA_IVTXD );
+  GPIO_enableInterrupt( LORA_PORT, LORA_IVTXD );
 
   __enable_interrupt();
 
@@ -155,13 +155,13 @@ void sx1275_reset() {
     // Reset on P1.4
     mcu_delayms(1);
 
-    GPIO_setAsOutputPin( GPIO_PORT_P1, GPIO_PIN4 );                             // Reset
-    GPIO_setOutputLowOnPin( GPIO_PORT_P1, GPIO_PIN4 );
+    GPIO_setAsOutputPin( LORA_PORT, LORA_RESET );                             // Reset
+    GPIO_setOutputLowOnPin( LORA_PORT, LORA_RESET );
 
     mcu_delayms(10);
 
-    GPIO_setOutputHighOnPin( GPIO_PORT_P1, GPIO_PIN4 );
-    GPIO_setAsInputPin( GPIO_PORT_P1, GPIO_PIN4 );                             // Reset
+    GPIO_setOutputHighOnPin( LORA_PORT, LORA_RESET );
+    GPIO_setAsInputPin( LORA_PORT, LORA_RESET );                             // Reset
 
     mcu_delayms(20);
 }
@@ -581,14 +581,14 @@ void sx1276_send(uint8_t *buffer, uint8_t size) {
 
       sx1276.Settings.State = RF_IDLE;
 
-#ifndef LOWPOWER
-      GPIO_toggleOutputOnPin( GPIO_PORT_P3, GPIO_PIN4 );   // FIFO-Write Time
+#ifdef TIME_MEASUREMENT
+      GPIO_toggleOutputOnPin(TM1_PIN);   // FIFO-Write Time
 #endif
       // Write payload buffer
       sx1276_write_fifo( buffer, size );
 
-#ifndef LOWPOWER
-      GPIO_toggleOutputOnPin( GPIO_PORT_P3, GPIO_PIN4 );   // FIFO-Write Time
+#ifdef TIME_MEASUREMENT
+      GPIO_toggleOutputOnPin(TM1_PIN);   // FIFO-Write Time
 #endif
 
       txTimeout = sx1276.Settings.LoRa.TxTimeout;
@@ -597,8 +597,8 @@ void sx1276_send(uint8_t *buffer, uint8_t size) {
   }
   sx1276_set_tx(txTimeout );
 
-#ifndef LOWPOWER
-  GPIO_setOutputHighOnPin( GPIO_PORT_P3, GPIO_PIN5 );   // Sending Time
+#ifdef TIME_MEASUREMENT
+  GPIO_setOutputHighOnPin(TM2_PIN);   // Sending Time
 #endif
 }
 
@@ -1077,36 +1077,20 @@ __attribute__ ((interrupt(PORT1_VECTOR)))
 
 void Port_1 (void) {
 
-#ifndef LOWPOWER
-    GPIO_setOutputHighOnPin( GPIO_PORT_P3, GPIO_PIN4 ); // Wake Up Time
-    GPIO_setOutputLowOnPin( GPIO_PORT_P3, GPIO_PIN5 );  // Sending Time
+#ifdef TIME_MEASUREMENT
+    GPIO_setOutputHighOnPin(TM1_PIN); // Wake Up Time
+    GPIO_setOutputLowOnPin(TM2_PIN);  // Sending Time
 #endif
 
-    if(GPIO_getInterruptStatus( GPIO_PORT_P1, GPIO_PIN3 )){
-#ifndef SPIARRAY
-        // Post sending - Full Library
+    if(GPIO_getInterruptStatus( LORA_PORT, LORA_IVTXD )){
+
         sx1276_on_dio0irq();
-#else
-        //Hard-coded SPI:
-        //clear RFLR_IRQFLAGS_TXDONE
-        spi_chipEnable();
-        spi_transfer_short(after_transmit[0]);
-        spi_transfer_short(after_transmit[1]);
-        spi_chipDisable();
 
-        //REG_OPMODE = 0x80 = LoRa+Sleep
-        spi_chipEnable();
-        spi_transfer_short(after_transmit[2]);
-        spi_transfer_short(after_transmit[3]);
-        spi_chipDisable();
-
-        sx1276.Settings.State = RF_IDLE;
-#endif
     }
-    GPIO_clearInterrupt( GPIO_PORT_P1, GPIO_PIN3 );     // IRQ Flag
+    GPIO_clearInterrupt( LORA_PORT, LORA_IVTXD );     // IRQ Flag
 
-#ifndef LOWPOWER
-    GPIO_setOutputLowOnPin( GPIO_PORT_P3, GPIO_PIN4 );  // Wake Up Time
+#ifdef TIME_MEASUREMENT
+    GPIO_setOutputLowOnPin(TM1_PIN);  // Wake Up Time
 #endif
 
 }

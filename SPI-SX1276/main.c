@@ -30,8 +30,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
 //*****************************************************************************
-//! LoRaWAN using SX1276 module.
-//! This code shows...
+//! LoRaWAN - SX1276
+//! This code implements the LoRaWAN protocol on the SX1276 module.
 //!
 //!             Tested on MSP430FR5969
 //!                 -----------------
@@ -60,6 +60,7 @@
 //!
 //!
 //*****************************************************************************
+
 #include "def.h"
 
 #include <clocks.h>
@@ -123,19 +124,15 @@ void main(void)
 #endif
 
    rf_init_lora();
-  //--------- END INIT --------------------------------
+   //--------- END INIT --------------------------------
 
 
-   	   //------- MAIN LOOP ------------------------
-   	   while(1){
-        __bis_SR_register(LPM3_bits + GIE);   // Enter LPM3
-        __no_operation();   // For debugger
-   	   }
+   //------- MAIN LOOP ------------------------
+   while(1){
+       __bis_SR_register(LPM3_bits + GIE);   // Enter LPM3
+       __no_operation();   // For debugger
+   }
 }
-
-
-
-
 
 
 
@@ -181,8 +178,8 @@ __attribute__((interrupt(TIMER1_A0_VECTOR)))
 void TIMER1_A0_ISR (void)
 {
 
-#ifndef LOWPOWER
-    GPIO_setOutputHighOnPin( GPIO_PORT_P3, GPIO_PIN4 );   //Wake Up Time - High
+#ifdef TIME_MEASUREMENT
+    GPIO_setOutputHighOnPin(TM1_PIN);   //Wake Up Time - High
 #endif
 
     uint16_t compVal = Timer_A_getCaptureCompareCount(TIMER_A1_BASE,
@@ -197,9 +194,9 @@ void TIMER1_A0_ISR (void)
         compVal
         );
 
-#ifndef LOWPOWER
-    GPIO_setOutputLowOnPin( GPIO_PORT_P3, GPIO_PIN4 );   //Wake Up Time - Low
+#ifdef TIME_MEASUREMENT
+    GPIO_setOutputLowOnPin(TM1_PIN);   //Wake Up Time - Low
 #endif
 
-    // Enter LPM3 again, is it automatically made when exiting interrupt
+    // Enter LPM3 again, is it automatically made when exiting interrupt, if in LPM3 before
 }
