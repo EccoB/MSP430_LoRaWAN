@@ -1,16 +1,18 @@
+#include <custom.h>
 #include "def.h"
 #include <math.h>
 #include <msp430.h>
 #include <string.h>
-#include "sx1276.h"
-#include "sx1276regs-fsk.h"
-#include "sx1276regs-lora.h"
 #include "mcu.h"
-//#include "uart.h"
 #include "spi.h"
 #include "stdio.h"
 #include <driverlib.h>
-#include <custom.h>
+#include <sx1276.h>
+#include <sx1276regs-fsk.h>
+#include <sx1276regs-lora.h>
+
+#ifdef SX1276_CHIP
+
 //static RadioEvents_t *RadioEvents;
 static uint8_t RxTxBuffer[RX_BUFFER_SIZE];
 sx1276_t sx1276;
@@ -1094,3 +1096,5 @@ void Port_1 (void) {
 #endif
 
 }
+
+#endif

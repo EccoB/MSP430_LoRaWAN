@@ -30,8 +30,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * --/COPYRIGHT--*/
 //*****************************************************************************
-//! LoRaWAN - SX1276
-//! This code implements the LoRaWAN protocol on the SX1276 module.
+//! LoRaWAN - SX1276/126X
+//! This code implements the LoRaWAN protocol on the SX1276 and SX126X modules.
 //!
 //!             Tested on MSP430FR5969
 //!                 _ _ _ _ _ _ _ _ _
@@ -50,7 +50,12 @@
 //!                |             P1.4|-> Slave Reset Out (RST) (optional)
 //!                |                 |
 //!                |             P1.3|<- Interrupt Request (DIO0) (optional, TxDone, RxDone)
-//!
+//!                |                 |
+//!                |             P3.0|<- Busy Pin (for SX126X only, optional)
+//!                |                 |
+//!                |             P4.3|-> Antenna-Switch Pin (for SX126X only, optional)
+//!                |                 |
+//!                |_________________|
 //!
 //! This code uses the above mentioned peripherals and I/O signals. You must
 //! review these and change as needed for your own board.
@@ -61,6 +66,7 @@
 //!
 //*****************************************************************************
 
+#include <custom.h>
 #include "def.h"
 #include <driverlib.h>
 
@@ -70,21 +76,15 @@
 #include "stdio.h"
 
 #include <stdint.h>
+#include <transmitter.h>
 #include "mcuspecific/mcu.h"
 #include "mcuspecific/spi.h"
 
-#include "transmitter/custom.h"
-#include "transmitter/transmitter.h"
 
 
 
 #define BUFFER_SIZE                       64 // Define the payload size here
 uint8_t buffer[BUFFER_SIZE];
-
-
-#define COMPARE_VALUE 624     // CCR0 value for timer interruption, @8MHz: 312 = 1 second
-
-char gStr[30];
 
 void initGPIO(void);
 void initTimer1A();
@@ -131,8 +131,18 @@ void main(void)
 
    //------- MAIN LOOP ------------------------
    while(1){
-       __bis_SR_register(LPM3_bits + GIE);   // Enter LPM3
-       __no_operation();   // For debugger
+       //SendPing(Callback_for_Tx);
+       //SendPing(0);
+
+       TestTransmission();
+
+       //rf_continuousListen(Callback_for_Rx);
+
+       //rf_turnOff(0);
+       //__bis_SR_register(LPM3_bits);   // Enter LPM3
+       //__no_operation();   // For debugger
+
+       mcu_delayms(4000);
    }
 }
 
@@ -188,7 +198,7 @@ void TIMER1_A0_ISR (void)
             TIMER_A_CAPTURECOMPARE_REGISTER_0)
             + COMPARE_VALUE;
 
-    TestTransmission(); // Send the specified amount of bytes as payload
+    receivingWindowsISR(); // Send the specified amount of bytes as payload
 
     //Add Offset to CCR0
     Timer_A_setCompareValue(TIMER_A1_BASE,

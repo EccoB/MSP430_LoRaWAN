@@ -1,8 +1,8 @@
 /*
  * transmitter.h
  *
- *  Created on: 07.08.2018
- *      Author: baeumker
+ *  Created on: 29.08.2018
+ *      Author: Armando Miguel
  */
 
 #ifndef TRANSMITTER_H_
@@ -12,16 +12,16 @@
 
 void rf_init_lora();
 
-void rf_setSpreadingF(int sf);
-void rf_setPAPower(int pa_power);
-void rf_transmit(char *data, unsigned int length);
-int rf_transmitReceiveB(char *dataToSend, unsigned int length, char *buffer);		//Returns -1: no data received, else: length of received data
+void rf_setSpreadingF(uint8_t sf);
+void rf_setPAPower(int8_t tx_power);
+void rf_transmit(uint8_t *data, uint8_t length, void (*recCallback)());
+void rf_transmitReceiveB(uint8_t *dataToSend, uint8_t length, void (*recCallback)(uint8_t *buffer, uint8_t length));
 
-void rf_loop();
-void rf_waitTillIdle();
-void rf_turnOff(int state);		//state=0 -> lowest possible power mode
+void rf_loop();         // Not implemented yet
+void rf_waitTillIdle(); // Wait until transmitter is in MODE_STDBY_RC or MODE_STDBY_XOSC mode
+void rf_turnOff(uint8_t state);     // state=0 -> "Deep" Sleep; state=1 -> Sleep with data retention
 
-void rf_continuousListen(void *(*recCallback)(char *buffer, int length));		//Non blocking function, should be called in a loop
+void rf_continuousListen(void (*recCallback)(uint8_t *buffer, uint8_t length));     // Non blocking function
 
 
 

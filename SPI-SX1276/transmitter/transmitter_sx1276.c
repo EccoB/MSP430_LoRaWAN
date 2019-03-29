@@ -4,17 +4,15 @@
  *  Created on: 07.08.2018
  *      Author: baeumker
  */
-#include "transmitter.h"
-#include "sx1276regs-lora.h"
-#include "sx1276.h"
-#include "custom.h"
+#include <custom.h>
+#include <sx1276.h>
+#include <sx1276regs-lora.h>
+#include <transmitter.h>
+#include "../def.h"
+
+#ifdef SX1276_CHIP
 
 static radio_events_t radio_events;
-
-
-
-
-
 
 //---------- Functions for reaction of different events --------------
 // Should be later be put in other places
@@ -34,21 +32,21 @@ void rf_waitTillIdle(){
 	while(sx1276.Settings.State != RF_IDLE);
 }
 
-void rf_setPAPower(int pa_power){
+void rf_setPAPower(int8_t tx_power){
 #ifdef RFM95
-            if( pa_power > 17 ) pa_power = 2;
+            if( tx_power > 17 ) tx_power = 2;
             paConfig = sx1276_read(REG_LR_PACONFIG);
-            paConfig = (paConfig & RFLR_PACONFIG_OUTPUTPOWER_MASK) | (uint8_t) ((uint16_t) (pa_power - 2) & 0x0F);
+            paConfig = (paConfig & RFLR_PACONFIG_OUTPUTPOWER_MASK) | (uint8_t) ((uint16_t) (tx_power - 2) & 0x0F);
             sx1276_write(REG_LR_PACONFIG, paConfig);
 #else
-            if( pa_power > 14 ) pa_power = -1;
+            if( tx_power > 14 ) tx_power = -1;
             paConfig = sx1276_read(REG_LR_PACONFIG);
-            paConfig = (paConfig & RFLR_PACONFIG_OUTPUTPOWER_MASK) | (uint8_t) ((uint16_t) (pa_power + 1) & 0x0F);
+            paConfig = (paConfig & RFLR_PACONFIG_OUTPUTPOWER_MASK) | (uint8_t) ((uint16_t) (tx_power + 1) & 0x0F);
             sx1276_write(REG_LR_PACONFIG, paConfig);
 #endif
 }
 
-void rf_setSpreadingF(int sf){
+void rf_setSpreadingF(uint8_t sf){
 	if(sf > 12)
 		sf = 7;
 
@@ -131,3 +129,5 @@ void rf_init_lora() {
   sx1276_set_opmode(RFLR_OPMODE_SLEEP);
 
 }
+
+#endif

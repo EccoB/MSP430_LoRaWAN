@@ -33,6 +33,8 @@
 #define STATUS_FAIL_BUSY           4
 #define STATUS_RX_MISSED_REAL_TIME 5
 
+char gStr[30]; // Buffer for UART Backchannel
+
 //***** TypeDefs **************************************************************
 struct Channel
 {

@@ -3,14 +3,18 @@
  * Definitions for different deploys
  *
  */
+
+//------Select the Chip being used here---------
+#define SX1276_CHIP
+//#define SX1261_CHIP
+//#define SX1262_CHIP
  
 #define TTN         // Encodes the payload in order to be compatible with TTN
 #define REDUCED     // Non-critical and repetitive configurations are not executed, e.g. setting the Invert_IQ every time a packet is send
+//#define SPIARRAY  // Instead of calling the LoRa library, a pre-filled array is completed with the data to send ! it needs REDUCED
 #define UART        // Enables and uses the UART-Backchannel to display the actual TX-Power and SF values
-#define LEDS        // Determines if LEDs are used or not
 //#define TIME_MEASUREMENT    // Pin for the measurement of Active- and Send-Time are enabled
-
-
+#define LEDS        // Determines if LEDs are used or not
 
 // Pins for Time-Measurement
 #define TM1_PIN      GPIO_PORT_P3, GPIO_PIN4    // Wake-Up Time

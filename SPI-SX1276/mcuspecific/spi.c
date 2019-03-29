@@ -1,10 +1,10 @@
 #include <msp430.h>
 #include <stdint.h>
 #include <driverlib.h>
-//#include "uart.h"
+#include "def.h"
 #include "spi.h"
 #include "stdio.h"
-#include <custom.h>		//to get the Pins for the module
+#include "../transmitter/custom.h"
 
 volatile uint8_t spi_buf = 0;
 
@@ -47,7 +47,11 @@ void initSPI(){
     param.desiredSpiClock = 8000000; // 8MHz
     param.msbFirst = EUSCI_B_SPI_MSB_FIRST;
     param.clockPhase = EUSCI_B_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
+#ifndef SX1276_CHIP
+    param.clockPolarity = EUSCI_B_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
+#else
     param.clockPolarity = EUSCI_B_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
+#endif
     param.spiMode = EUSCI_B_SPI_3PIN;
     EUSCI_B_SPI_initMaster(EUSCI_B0_BASE, &param);
 

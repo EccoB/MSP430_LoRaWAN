@@ -3,11 +3,11 @@
 // ----------------------------------------------------------------------------
 
 //***** Header Files **********************************************************
+#include <custom.h>
 #include "def.h"
 #include <driverlib.h>
 #include <gpio.h>
 #include <uart.h>
-#include <custom.h>
 
 //***** Defines ***************************************************************
 
@@ -47,10 +47,18 @@ void initGPIO(void) {
     GPIO_setOutputHighOnPin(NSS_PIN);
 
     // Set pin P1.4 to input direction, reset pin floating
-    GPIO_setAsInputPin(SX_RESET_PIN);                              // Reset
+    GPIO_setAsInputPinWithPullUpResistor(SX_RESET_PIN);     // Reset
 
     // Set pin P1.3 to input direction, IRQ pin for TXDone
-    GPIO_setAsInputPinWithPullDownResistor(IRQ_PIN);          // IRQ pin
+    GPIO_setAsInputPinWithPullDownResistor(IRQ_PIN);        // IRQ pin
+
+#ifndef SX1276_CHIP
+    // Set pin P3.0 to input direction, Busy pin
+    GPIO_setAsInputPinWithPullUpResistor(BUSY_PIN);       // Busy pin
+
+    // Set pin P4.3 to input direction, antSwPower pin
+    GPIO_setAsOutputPin(ANT_SW_PIN);                        // antSwPower pin
+#endif
 
 #ifndef LOWPOWER    // Pins that are set as inputs drain more current than outputs
     // Set pin P4.5 to input direction, Push Button S1

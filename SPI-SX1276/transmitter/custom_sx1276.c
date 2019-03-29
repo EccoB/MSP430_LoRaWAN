@@ -4,23 +4,19 @@
  *  Created on: 07.08.2018
  *      Author: baeumker
  */
-#include "custom.h"
-#include "sx1276regs-lora.h"
+#include <custom.h>
 #include "../ttn/LoRaMacCrypto.h"
-#include "sx1276.h"
-
 #include <driverlib.h>
+#include <sx1276.h>
+#include <sx1276regs-lora.h>
+#include "../def.h"
 
+#ifdef SX1276_CHIP
 
 //-------- Configuration - change here ----------------------------------------
-/*
 const uint8_t net_key[16] = {0x00};
 const uint8_t app_key[16] = {0x00};
 const uint32_t device_address = 0x11111111;
-*/
-const uint8_t net_key[] = {0xED, 0xFA, 0xDF, 0xCB, 0xE7, 0xE2, 0x85, 0x0E, 0x3E, 0x67, 0x8F, 0x23, 0x61, 0x51, 0xE6, 0x73};
-const uint8_t app_key[] = {0x9E, 0xC9, 0xED, 0x9F, 0xEB, 0xDF, 0x15, 0x55, 0xF9, 0x0F, 0x20, 0x47, 0x76, 0x60, 0x70, 0x4E};
-const uint32_t device_address = 0x26011605;
 //----------------------------------------------------------------------------
 
 #define DIR_UPLINK          0
@@ -90,3 +86,9 @@ void TestTransmission() {
   GPIO_toggleOutputOnPin(LED_GREEN); // Green LED
 #endif
 }
+
+void receivingWindowsISR(){
+    // Not implemented yet
+}
+
+#endif
