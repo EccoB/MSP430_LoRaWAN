@@ -34,7 +34,7 @@
 //! This code implements the LoRaWAN protocol on the SX1276 module.
 //!
 //!             Tested on MSP430FR5969
-//!                 -----------------
+//!                 _ _ _ _ _ _ _ _ _
 //!            /|\ |                 |
 //!             |  |                 |
 //!    Master---+->|RST              |
@@ -62,16 +62,16 @@
 //*****************************************************************************
 
 #include "def.h"
-
-#include <clocks.h>
 #include <driverlib.h>
-#include <gpio.h>
-#include <uart.h>
+
+#include "mcuspecific/clocks.h"
+#include "mcuspecific/gpio.h"
+#include "mcuspecific/uart.h"
 #include "stdio.h"
 
 #include <stdint.h>
-#include "mcu.h"
-#include "spi.h"
+#include "mcuspecific/mcu.h"
+#include "mcuspecific/spi.h"
 
 #include "transmitter/custom.h"
 #include "transmitter/transmitter.h"
@@ -103,6 +103,9 @@ void main(void)
     // Initialize SPI
     initSPI();
 
+    // Initialize LoRa module
+    rf_init_lora();
+
     // Initialize Timer 1A
     initTimer1A();
 
@@ -123,7 +126,6 @@ void main(void)
     myUart_writeBuf( BACKCHANNEL_UART, "--", NULL, CRLF );
 #endif
 
-   rf_init_lora();
    //--------- END INIT --------------------------------
 
 

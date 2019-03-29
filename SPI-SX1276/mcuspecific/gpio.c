@@ -35,29 +35,29 @@ void initGPIO(void) {
     PJDIR = 0xFFFF;
 
     // Set pin P4.6 to output direction, then turn LED off
-    GPIO_setAsOutputPin( GPIO_PORT_P4, GPIO_PIN6 );                             // Red LED (LED1)
-    GPIO_setOutputLowOnPin( GPIO_PORT_P4, GPIO_PIN6 );
+    GPIO_setAsOutputPin(LED_RED);                             // Red LED (LED1)
+    GPIO_setOutputLowOnPin(LED_RED);
 
     // Set pin P1.0 to output direction and turn LED off
-    GPIO_setAsOutputPin( GPIO_PORT_P1, GPIO_PIN0 );                             // Green LED (LED2)
-    GPIO_setOutputLowOnPin( GPIO_PORT_P1, GPIO_PIN0 );
+    GPIO_setAsOutputPin(LED_GREEN);                             // Green LED (LED2)
+    GPIO_setOutputLowOnPin(LED_GREEN);
 
     // Set pin P1.5 to output direction, disable SPI slave
-    GPIO_setAsOutputPin( LORA_PORT, LORA_CSPIN );                             // Chip Select
-    GPIO_setOutputHighOnPin( LORA_PORT, LORA_CSPIN );
+    GPIO_setAsOutputPin(NSS_PIN);                             // Chip Select
+    GPIO_setOutputHighOnPin(NSS_PIN);
 
     // Set pin P1.4 to input direction, reset pin floating
-    GPIO_setAsInputPin( GPIO_PORT_P1, GPIO_PIN4 );                              // Reset
+    GPIO_setAsInputPin(SX_RESET_PIN);                              // Reset
 
     // Set pin P1.3 to input direction, IRQ pin for TXDone
-    GPIO_setAsInputPinWithPullDownResistor( LORA_PORT, GPIO_PIN3 );          // IRQ pin
+    GPIO_setAsInputPinWithPullDownResistor(IRQ_PIN);          // IRQ pin
 
 #ifndef LOWPOWER    // Pins that are set as inputs drain more current than outputs
     // Set pin P4.5 to input direction, Push Button S1
-    GPIO_setAsInputPinWithPullUpResistor( GPIO_PORT_P4, GPIO_PIN5 );            // Left Push
+    GPIO_setAsInputPinWithPullUpResistor(PUSH_LEFT);            // Left Push
 
     // Set pin P1.1 to input direction, Push Button S2
-    GPIO_setAsInputPinWithPullUpResistor( GPIO_PORT_P1, GPIO_PIN1 );            // Right Push
+    GPIO_setAsInputPinWithPullUpResistor(PUSH_RIGHT);            // Right Push
 #endif
 
     // Unlock pins (required for most FRAM devices)

@@ -133,10 +133,10 @@ void sx1276_init(radio_events_t* events) {
   sx1276_set_opmode(RFLR_OPMODE_SLEEP);
 
   // Init IRQ interrupt for DIO0 = TXDone
-  GPIO_setAsInputPinWithPullDownResistor( LORA_PORT, LORA_IVTXD );          // IRQ pin
-  GPIO_selectInterruptEdge( LORA_PORT, LORA_IVTXD, GPIO_LOW_TO_HIGH_TRANSITION );
-  GPIO_clearInterrupt( LORA_PORT, LORA_IVTXD );
-  GPIO_enableInterrupt( LORA_PORT, LORA_IVTXD );
+  GPIO_setAsInputPinWithPullDownResistor(IRQ_PIN);          // IRQ pin
+  GPIO_selectInterruptEdge(IRQ_PIN, GPIO_LOW_TO_HIGH_TRANSITION );
+  GPIO_clearInterrupt(IRQ_PIN);
+  GPIO_enableInterrupt(IRQ_PIN);
 
   __enable_interrupt();
 
@@ -155,13 +155,13 @@ void sx1275_reset() {
     // Reset on P1.4
     mcu_delayms(1);
 
-    GPIO_setAsOutputPin( LORA_PORT, LORA_RESET );                             // Reset
-    GPIO_setOutputLowOnPin( LORA_PORT, LORA_RESET );
+    GPIO_setAsOutputPin(SX_RESET_PIN);                             // Reset
+    GPIO_setOutputLowOnPin(SX_RESET_PIN);
 
     mcu_delayms(10);
 
-    GPIO_setOutputHighOnPin( LORA_PORT, LORA_RESET );
-    GPIO_setAsInputPin( LORA_PORT, LORA_RESET );                             // Reset
+    GPIO_setOutputHighOnPin(SX_RESET_PIN);
+    GPIO_setAsInputPin(SX_RESET_PIN);                             // Reset
 
     mcu_delayms(20);
 }
@@ -1082,12 +1082,12 @@ void Port_1 (void) {
     GPIO_setOutputLowOnPin(TM2_PIN);  // Sending Time
 #endif
 
-    if(GPIO_getInterruptStatus( LORA_PORT, LORA_IVTXD )){
+    if(GPIO_getInterruptStatus(IRQ_PIN)){
 
         sx1276_on_dio0irq();
 
     }
-    GPIO_clearInterrupt( LORA_PORT, LORA_IVTXD );     // IRQ Flag
+    GPIO_clearInterrupt(IRQ_PIN);     // IRQ Flag
 
 #ifdef TIME_MEASUREMENT
     GPIO_setOutputLowOnPin(TM1_PIN);  // Wake Up Time

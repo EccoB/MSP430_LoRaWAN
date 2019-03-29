@@ -15,3 +15,10 @@
 // Pins for Time-Measurement
 #define TM1_PIN      GPIO_PORT_P3, GPIO_PIN4    // Wake-Up Time
 #define TM2_PIN      GPIO_PORT_P3, GPIO_PIN5    // Sending Time
+
+// Board-specific pins
+#define LED_RED      GPIO_PORT_P4, GPIO_PIN6
+#define LED_GREEN    GPIO_PORT_P1, GPIO_PIN0
+#define PUSH_LEFT    GPIO_PORT_P4, GPIO_PIN5
+#define PUSH_RIGHT   GPIO_PORT_P1, GPIO_PIN1
+
